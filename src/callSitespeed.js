@@ -21,7 +21,7 @@ const callSitespeed = async function(url) {
             engine: 'external',
           },
           headless: true,
-          browser: 'firefox'
+          browser: 'chrome'
         },
         sustainable: {
           enable: true,
@@ -29,10 +29,14 @@ const callSitespeed = async function(url) {
           useGreenWebHostingAPI: true
         },
         firstParty: true,
-        outputFolder: `tmp/${name}-${timestamp}`,
+        outputFolder: `tmp/${timestamp}-${name}`,
         name: name
       });
-      return result;
+
+      return {
+        result,
+        path: `${timestamp}-${name}`
+      };
     } catch (e) {
       return e;
     }

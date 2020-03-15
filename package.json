@@ -26,11 +26,14 @@
   "homepage": "https://github.com/Greening-Digital/greenspeed#readme",
   "devDependencies": {
     "jest": "^25.1.0",
-    "np": "^6.2.0"
+    "nodemon": "^2.0.2",
+    "np": "^5.2.1"
   },
   "dependencies": {
     "@hapi/hapi": "^19.1.1",
-    "@tgwf/co2": "^0.5.0",
+    "@hapi/inert": "^6.0.1",
+    "@tgwf/co2": "^0.6.1",
+    "mvdir": "^1.0.17",
     "sitespeed.io": "^12.1.0"
   }
 }
