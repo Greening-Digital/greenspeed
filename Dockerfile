@@ -12,6 +12,8 @@ ENV FIREFOX_VERSION 74.0
 
 ENV PATH="/usr/local/bin:${PATH}"
 
+RUN apt-get update && apt -y install vim
+
 RUN buildDeps='wget bzip2' && apt-get update && apt -y install $buildDeps && \
     # Download and unpack the correct Firefox version
     wget https://ftp.mozilla.org/pub/firefox/releases/${FIREFOX_VERSION}/linux-x86_64/en-US/firefox-${FIREFOX_VERSION}.tar.bz2 && \
@@ -31,7 +33,20 @@ RUN buildDeps='wget bzip2' && apt-get update && apt -y install $buildDeps && \
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . /usr/src/app
-RUN npm install
+RUN CHROMEDRIVER_SKIP_DOWNLOAD=true EGDEDRIVER_SKIP_DOWNLOAD=true npm install --production
 
-ENTRYPOINT ["npm","start"]
+WORKDIR /usr/src/app
+COPY docker/scripts/start-slim.sh /start.sh
+
+# Allow all users to run commands needed by sitespeedio/throttle via sudo
+# See https://github.com/sitespeedio/throttle/blob/master/lib/tc.js
+RUN echo 'ALL ALL=NOPASSWD: /usr/sbin/tc, /usr/sbin/route, /usr/sbin/ip' > /etc/sudoers.d/tc
+
+
+
+# ENTRYPOINT ["npm","start"]
+ENTRYPOINT ["bash","/start.sh"]
+
+VOLUME /sitespeed.io
+WORKDIR /sitespeed.io
 
