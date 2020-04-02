@@ -32,6 +32,6 @@
   "dependencies": {
     "@hapi/hapi": "^19.0.0",
     "@tgwf/co2": "^0.6.0",
-    "sitespeed.io": "^12.0.0"
+    "sitespeed.io": "^12.3.1"
   }
 }
