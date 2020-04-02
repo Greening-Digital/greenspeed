@@ -25,10 +25,11 @@ const callSitespeed = async function(url) {
         },
         sustainable: {
           enable: true,
-          pageViews: 100000,
-          useGreenWebHostingAPI: true
+          hosting: true,
+          co2PerDomain: true,
+          dirtiestResources: true,
+          useGreenWebHostingAPI: true,
         },
-        firstParty: true,
         outputFolder: `tmp/${name}-${timestamp}`,
         name: name
       });
