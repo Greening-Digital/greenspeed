@@ -67,5 +67,14 @@ describe ("API Server", () => {
   });
 
 })
+describe ("WebUI Server", () => {
 
+  test.todo("Visiting the main page request serves a static page for submissions")
+
+  test.todo("Submitting a site, takes you to a waiting page for the results")
+
+  test.todo("Submitting a site, saves the site, and pending of the run")
+
+  test.todo("Waiting page for the results are updated after its greenspeed run has completed")
+})
 
