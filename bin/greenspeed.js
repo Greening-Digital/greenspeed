@@ -9,6 +9,7 @@ const callSiteSpeed = require("../src/callSitespeed");
 const Bossy = require('@hapi/bossy');
 
 const { start } = require("../src/index");
+const webui = require("../src/webui");
 
 const definition = {
   h: {
@@ -28,6 +29,11 @@ const definition = {
   a: {
     description: 'Runs as an API server, as part of a larger system',
     alias: 'headless',
+    type: 'boolean'
+  },
+  w: {
+    description: 'Runs a server with a web UI',
+    alias: 'webUI',
     type: 'boolean'
   }
 
@@ -82,6 +88,11 @@ async function runGreenSpeedCLI(args) {
   }
 }
 
+async function runWebUI(args) {
+  const server = await webui.init();
+  webui.start();
+}
+
 async function runServer(args) {
   start();
 }
@@ -93,6 +104,9 @@ async function main(args) {
   }
   if (args.s) {
     return await runServer(args)
+  }
+  if (args.w) {
+    return await runWebUI(args)
   }
 }
 main(args);

@@ -1,17 +1,17 @@
 'use strict';
 
-const { init, start } = require('../index');
+const { init, start } = require('../webui');
 
 jest.mock('../callSitespeed');
 
-describe ("API Server", () => {
+describe("API Server", () => {
 
   let server;
 
   beforeEach(async () => {
     server = await init();
   });
-  
+
   afterEach(async () => {
     await server.stop();
   });
@@ -25,7 +25,7 @@ describe ("API Server", () => {
     const data = await server.inject(options);
     expect(data.statusCode).toBe(404);
   });
-  
+
   test('POST request with no payload returns failure', async () => {
     const options = {
       method: 'POST',
@@ -38,7 +38,7 @@ describe ("API Server", () => {
     expect(data.statusCode).toBe(400);
     expect(data.payload).toBe('Bad Request: no URL received');
   });
-  
+
   test('POST request with incorrect URL returns failure', async () => {
     const options = {
       method: 'POST',
@@ -51,7 +51,7 @@ describe ("API Server", () => {
     expect(data.statusCode).toBe(400);
     expect(data.payload).toBe('Bad Request: bad URL received');
   });
-  
+
   test('POST request with correct URL returns success', async () => {
     const options = {
       method: 'POST',
@@ -60,16 +60,34 @@ describe ("API Server", () => {
         url: 'http://example.com'
       }
     };
-  
+
     const data = await server.inject(options);
     expect(data.statusCode).toBe(204);
     expect(data.payload).toBe('');
   });
 
 })
-describe ("WebUI Server", () => {
+describe("WebUI Server", () => {
 
-  test.todo("Visiting the main page request serves a static page for submissions")
+  let server;
+
+  beforeEach(async () => {
+    server = await init();
+  });
+
+  afterEach(async () => {
+    await server.stop();
+  });
+
+
+  test.only("GET / - serves a static page for submissions", async () => {
+    const options = {
+      method: 'GET',
+      url: '/'
+    };
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(200);
+  })
 
   test.todo("Submitting a site, takes you to a waiting page for the results")
 
