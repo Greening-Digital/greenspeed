@@ -3,6 +3,7 @@
 const Hapi = require('@hapi/hapi');
 
 const callSitespeed = require('./callSitespeed');
+const log = require("debug")("gd:greenspeed:server");
 
 const server = Hapi.server({
   port: process.env.PORT || 3000,
@@ -34,20 +35,6 @@ server.route({
   },
   options: {
     auth: false,
-    // validate: {
-    // payload: {
-    //     url: TODO
-    // Insert your joi schema here
-    //  https://hapi.dev/family/joi/tester/
-    // Joi.string().uri({
-    //   scheme: [
-    //     'http',
-    //     'https'
-    //    ]
-    // })
-
-    // }
-    // }
   }
 
 });
@@ -57,18 +44,28 @@ const isUrl = function(url) {
   return regexp.test(url);
 }
 
-const init = async () => {
+const start = async () => {
   await server.start();
-  console.log('Server running on %s', server.info.uri);
+  log('Server running on %s', server.info.uri);
+  return server;
+};
+
+const init = async () => {
+  await server.initialize();
+  log('Server running on %s', server.info.uri);
+  return server;
 };
 
 
-process.on('unhandledRejection', (err) => {
 
+process.on('unhandledRejection', (err) => {
   console.log(err);
   process.exit(1);
 });
 
-init();
 
-module.exports = server;
+module.exports = {
+  start,
+  init,
+  server
+};

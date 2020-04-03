@@ -1,67 +1,71 @@
 'use strict';
 
-const server = require('../index')
+const { init, start } = require('../index');
 
-jest.mock('../callSitespeed')
+jest.mock('../callSitespeed');
 
-beforeAll((done) => {
-  server.events.on('start', () => {
-      done();
+describe ("API Server", () => {
+
+  let server;
+
+  beforeEach(async () => {
+    server = await init();
   });
-});
-
-afterAll((done) => {
-  server.events.on('stop', () => {
-      done();
+  
+  afterEach(async () => {
+    await server.stop();
   });
-  server.stop();
-});
 
-test('GET request returns failure', async () => {
-  const options = {
-    method: 'GET',
-    url: '/'
-  };
-  const data = await server.inject(options);
-  expect(data.statusCode).toBe(404);
-});
+  test('GET request returns failure', async () => {
 
-test('POST request with no payload returns failure', async () => {
-  const options = {
-    method: 'POST',
-    url: '/',
-    payload: {
-      url: null
-    }
-  };
-  const data = await server.inject(options);
-  expect(data.statusCode).toBe(400);
-  expect(data.payload).toBe('Bad Request: no URL received');
-});
+    const options = {
+      method: 'GET',
+      url: '/'
+    };
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(404);
+  });
+  
+  test('POST request with no payload returns failure', async () => {
+    const options = {
+      method: 'POST',
+      url: '/',
+      payload: {
+        url: null
+      }
+    };
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(400);
+    expect(data.payload).toBe('Bad Request: no URL received');
+  });
+  
+  test('POST request with incorrect URL returns failure', async () => {
+    const options = {
+      method: 'POST',
+      url: '/',
+      payload: {
+        url: 'badurl'
+      }
+    };
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(400);
+    expect(data.payload).toBe('Bad Request: bad URL received');
+  });
+  
+  test('POST request with correct URL returns success', async () => {
+    const options = {
+      method: 'POST',
+      url: '/',
+      payload: {
+        url: 'http://example.com'
+      }
+    };
+  
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(204);
+    expect(data.payload).toBe('');
+  });
 
-test('POST request with incorrect URL returns failure', async () => {
-  const options = {
-    method: 'POST',
-    url: '/',
-    payload: {
-      url: 'badurl'
-    }
-  };
-  const data = await server.inject(options);
-  expect(data.statusCode).toBe(400);
-  expect(data.payload).toBe('Bad Request: bad URL received');
-});
+})
 
-test('POST request with correct URL returns success', async () => {
-  const options = {
-    method: 'POST',
-    url: '/',
-    payload: {
-      url: 'http://example.com'
-    }
-  };
 
-  const data = await server.inject(options);
-  expect(data.statusCode).toBe(204);
-  expect(data.payload).toBe('');
-});
