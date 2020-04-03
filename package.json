@@ -2,7 +2,7 @@
   "name": "greenspeed",
   "version": "0.0.1",
   "description": "A hosted version of sitespeed",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest",
     "start": "node src/index.js",
@@ -30,6 +30,7 @@
     "np": "^6.0.0"
   },
   "dependencies": {
+    "@hapi/bossy": "^5.0.0",
     "@hapi/hapi": "^19.0.0",
     "@tgwf/co2": "^0.6.0",
     "sitespeed.io": "^12.3.1"
