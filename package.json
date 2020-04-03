@@ -32,6 +32,7 @@
   "dependencies": {
     "@hapi/bossy": "^5.0.0",
     "@hapi/hapi": "^19.0.0",
+    "@hapi/inert": "^6.0.1",
     "@tgwf/co2": "^0.6.0",
     "sitespeed.io": "^12.3.1"
   }
