@@ -8,8 +8,8 @@ const log = require("debug")("gd:greenspeed:cli");
 const callSiteSpeed = require("../src/callSitespeed");
 const Bossy = require('@hapi/bossy');
 
-const { start } = require("../src/index");
-const webui = require("../src/webui");
+const apiServer = require("../src/index");
+const webUI = require("../src/webui");
 
 const definition = {
   h: {
@@ -89,12 +89,11 @@ async function runGreenSpeedCLI(args) {
 }
 
 async function runWebUI(args) {
-  const server = await webui.init();
-  webui.start();
+  webUI.start();
 }
 
 async function runServer(args) {
-  start();
+  apiServer.start();
 }
 
 async function main(args) {
