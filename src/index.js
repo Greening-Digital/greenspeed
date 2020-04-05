@@ -3,6 +3,7 @@
 const Hapi = require('@hapi/hapi');
 
 const callSitespeed = require('./callSitespeed');
+const GreenSpeedAPI = require('./greenspeed-api')
 const log = require("debug")("gd:greenspeed:server");
 
 const server = Hapi.server({
@@ -45,12 +46,14 @@ const isUrl = function(url) {
 }
 
 const start = async () => {
+
   await server.start();
   console.log('Server running on %s', server.info.uri);
   return server;
 };
 
 const init = async () => {
+  await server.register(GreenSpeedAPI);
   await server.initialize();
   return server;
 };
