@@ -1,7 +1,6 @@
 'use strict';
 
 const Hapi = require('@hapi/hapi');
-const Path = require('path');
 const log = require("debug")("gd:greenspeed:webui");
 const WebUI = require('./plugin-web-ui');
 // const Boom = require("@hapi/boom")
@@ -13,11 +12,6 @@ const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT || 3000,
     host: '0.0.0.0',
-    routes: {
-      files: {
-          relativeTo: Path.join(__dirname, 'public')
-      }
-    }
   });
 
   await server.initialize();

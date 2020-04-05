@@ -1,8 +1,8 @@
 'use strict';
 
-const Hapi = require('@hapi/hapi');
-const Inert = require('@hapi/inert');
 
+const Inert = require('@hapi/inert');
+const Path = require('path');
 const log = require("debug")("gd:greenspeed:plugin:web-ui");
 
 const WebUI = {
@@ -11,6 +11,7 @@ const WebUI = {
   once: true, // ignore repeated calls to register this plugin
   register: async function(server, options) {
     await server.register(Inert);
+    server.path(Path.join(__dirname, 'public'));
 
     server.route({
       method: 'GET',
@@ -19,7 +20,7 @@ const WebUI = {
         directory: {
           path: '.',
           redirectToSlash: true,
-        }
+        },
       }
     });
   }
