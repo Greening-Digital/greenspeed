@@ -17,16 +17,6 @@ describe("API Server", () => {
     await server.stop();
   });
 
-  test.only('GET /test returns 200 - sanity check for plugins', async () => {
-
-    const options = {
-      method: 'GET',
-      url: '/test'
-    };
-    const data = await server.inject(options);
-    expect(data.statusCode).toBe(200);
-  });
-
 
   test('GET request returns failure', async () => {
 
