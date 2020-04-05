@@ -13,7 +13,7 @@ describe("WebUI Server", () => {
   });
 
 
-  test.skip("GET / - serves a static page for submissions", async () => {
+  test("GET / - serves a static page for submissions", async () => {
     const options = {
       method: 'GET',
       url: '/'

@@ -2,7 +2,7 @@
 
 const Hapi = require('@hapi/hapi');
 
-const GreenSpeedAPI = require('./greenspeed-api')
+const GreenSpeedAPI = require('./plugin-api')
 const log = require("debug")("gd:greenspeed:api");
 
 const start = async () => {
