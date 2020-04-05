@@ -20,7 +20,7 @@ const init = async () => {
 }
 
 const start = async () => {
-  server = init()
+  const server = await init();
 
   await server.start();
   log('Server running on %s', server.info.uri);

@@ -6,7 +6,7 @@ const GreenSpeedAPI = require('./plugin-api')
 const log = require("debug")("gd:greenspeed:api");
 
 const start = async () => {
-  server = init()
+   const server = init();
 
   await server.start();
   log('Server running on %s', server.info.uri);
