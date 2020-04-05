@@ -13,10 +13,6 @@ const GreenSpeedAPIPLugin = {
   register: async function(server, options) {
 
     server.route({
-      method: 'GET',
-      path: '/test',
-      handler: function (request, h) {
-          return 'hello, world';
       }
     })
     log("greenSpeedAPI registered");
