@@ -21,15 +21,10 @@ const definition = {
       alias: 'url',
   },
   s: {
-    description: 'Run greenspeed as a server, designed to allow triggering of runs though a browser',
+    description: 'Run greenspeed as an API, triggering runs via POST request',
     alias: 'server',
     type: 'boolean'
   },
-  a: {
-    description: 'Runs as an API server, as part of a larger system',
-    alias: 'headless',
-    type: 'boolean'
-  }
 
 };
 
