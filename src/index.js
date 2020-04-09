@@ -46,13 +46,12 @@ const isUrl = function(url) {
 
 const start = async () => {
   await server.start();
-  log('Server running on %s', server.info.uri);
+  console.log('Server running on %s', server.info.uri);
   return server;
 };
 
 const init = async () => {
   await server.initialize();
-  log('Server running on %s', server.info.uri);
   return server;
 };
 
