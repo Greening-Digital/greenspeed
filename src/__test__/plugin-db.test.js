@@ -38,20 +38,23 @@ describe("DB server plugin", () => {
 
     const data = await server.inject(options);
 
-    expect(data.statusCode).toBe(201);
-
-
     const res2 = await GreenSpeedRun.query().count('id').first();
     const count2 = res2["count(`id`)"]
     expect(count2).toEqual(1);
-
-
-
-
-    // check there is one job
   })
 
-  test.todo("Submitting a site redirects you to a page for the report for the url")
+  test("Submitting a site redirects you to a page for the report for the url", async () => {
+    const options = {
+      method: 'POST',
+      url: '/queue-site',
+      payload: {
+        url: "https://greening.digital"
+      }
+    };
+
+    const data = await server.inject(options);
+    expect(data.statusCode).toBe(302);
+  })
 
   test.todo("A waiting page for a url is updated after the greenspeed run has completed")
 })

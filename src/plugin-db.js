@@ -27,6 +27,13 @@ const DB = {
         return 'greenspeed_run';
       }
 
+      static get statuses() {
+        return {
+          PENDING: 1,
+          FINISHED: 2
+        }
+      }
+
       static get joiSchema() {
         return Joi.object({
           id: Joi.number(),
@@ -58,11 +65,11 @@ const DB = {
             await GreenSpeedRun.query().insert({
               url: request.payload.url,
               sitespeed_request_at: now,
-              sitespeed_status: 1,
+              sitespeed_status: GreenSpeedRun.statuses.PENDING,
               created_at: now
             })
-            
-            return h.response().created()
+            const domain = new URL(request.payload.url).host;
+            return h.response().redirect(`${domain}-${now}`)
       },
       options: {
         validate: {
