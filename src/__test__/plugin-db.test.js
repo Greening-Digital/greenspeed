@@ -20,7 +20,7 @@ describe("DB server plugin", () => {
     await server.stop();
   });
 
-  test("Submitting a site, write the page to a database", async () => {
+  test("Submitting a site, writes the page to a database", async () => {
 
     // check that there are no jobs in the db
     const { GreenSpeedRun } = server.models();
@@ -28,7 +28,18 @@ describe("DB server plugin", () => {
     const count = res["count(`id`)"]
     expect(count).toEqual(0);
 
-    const goog = await GreenSpeedRun.query().insert({ url: 'http://google.com' })
+    const options = {
+      method: 'POST',
+      url: '/queue-site',
+      payload: {
+        url: "https://greening.digital"
+      }
+    };
+
+    const data = await server.inject(options);
+
+    expect(data.statusCode).toBe(201);
+
 
     const res2 = await GreenSpeedRun.query().count('id').first();
     const count2 = res2["count(`id`)"]

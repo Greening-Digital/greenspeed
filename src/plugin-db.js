@@ -1,9 +1,10 @@
 'use strict';
 
-const Path = require('path');
+
 const log = require("debug")("gd:greenspeed:plugin:greenspeed-run");
 const Schwifty = require('schwifty');
 const Joi = require('@hapi/joi');
+const Boom = require('@hapi/boom');
 
 const DB = {
   name: 'DB',
@@ -21,33 +22,55 @@ const DB = {
       }
     });
 
+    class GreenSpeedRun extends Schwifty.Model {
+      static get tableName() {
+        return 'greenspeed_run';
+      }
+
+      static get joiSchema() {
+        return Joi.object({
+          id: Joi.number(),
+          requester_email: Joi.string(),
+          url: Joi.string().uri({scheme: ["http", "https"]}),
+          sitespeed_request_at: Joi.date().timestamp(),
+          sitespeed_response_at: Joi.date().timestamp(),
+          sitespeed_status: Joi.number(),
+          result_location: Joi.string(),
+          created_at: Joi.date().timestamp(),
+          updated_at: Joi.date().timestamp(),
+        });
+      }
+    }
+
     // register the table with Schwifty to make to make it accessible
-    await server.schwifty(
+    await server.schwifty(GreenSpeedRun);
 
-      // the API writes the request to a db.
-      class GreenSpeedRun extends Schwifty.Model {
-        static get tableName() {
-          return 'greenspeed_run';
-        }
 
-        static get joiSchema() {
-          return Joi.object({
-            id: Joi.number(),
-            requester_email: Joi.string(),
-            url: Joi.string().uri({scheme: ["http", "https"]}),
-            sitespeed_requested_at: Joi.date().timestamp(),
-            sitespeed_response_at: Joi.date().timestamp(),
-            sitespeed_status: Joi.number(),
-            result_location: Joi.string(),
-            inserted_at: Joi.date().timestamp(),
-            updated_at: Joi.date().timestamp(),
-          });
+    server.route({
+      method: 'POST',
+      path: '/queue-site',
+      handler: async (request, h) => {
+            request.log(`payload: ${request.payload}`)
+            // create our object
+            const now = Date.now()
+            const { GreenSpeedRun } = server.models();
+
+            await GreenSpeedRun.query().insert({
+              url: request.payload.url,
+              sitespeed_request_at: now,
+              sitespeed_status: 1,
+              created_at: now
+            })
+            
+            return h.response().created()
+      },
+      options: {
+        validate: {
+          payload: GreenSpeedRun.joiSchema
         }
       }
-    );
+    })
 
-    // set up the connection, so we can access models
-    const knex = await server.knex();
 
     log("registered");
   }
