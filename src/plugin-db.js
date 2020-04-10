@@ -5,6 +5,7 @@ const log = require("debug")("gd:greenspeed:plugin:greenspeed-run");
 const Schwifty = require('schwifty');
 const Joi = require('@hapi/joi');
 const Boom = require('@hapi/boom');
+const GreenSpeedRun = require('./models/greenspeed-run')
 
 const DB = {
   name: 'DB',
@@ -22,32 +23,6 @@ const DB = {
       }
     });
 
-    class GreenSpeedRun extends Schwifty.Model {
-      static get tableName() {
-        return 'greenspeed_run';
-      }
-
-      static get statuses() {
-        return {
-          PENDING: 1,
-          FINISHED: 2
-        }
-      }
-
-      static get joiSchema() {
-        return Joi.object({
-          id: Joi.number(),
-          requester_email: Joi.string(),
-          url: Joi.string().uri({scheme: ["http", "https"]}),
-          sitespeed_request_at: Joi.date().timestamp(),
-          sitespeed_response_at: Joi.date().timestamp(),
-          sitespeed_status: Joi.number(),
-          result_location: Joi.string(),
-          created_at: Joi.date().timestamp(),
-          updated_at: Joi.date().timestamp(),
-        });
-      }
-    }
 
     // register the table with Schwifty to make to make it accessible
     await server.schwifty(GreenSpeedRun);
@@ -59,17 +34,17 @@ const DB = {
       handler: async (request, h) => {
             request.log(`payload: ${request.payload}`)
             // create our object
-            const now = Date.now()
+            const now = new Date()
             const { GreenSpeedRun } = server.models();
 
             await GreenSpeedRun.query().insert({
               url: request.payload.url,
-              sitespeed_request_at: now,
+              sitespeed_request_at: now.getTime(),
               sitespeed_status: GreenSpeedRun.statuses.PENDING,
-              created_at: now
+              created_at: now.getTime()
             })
             const domain = new URL(request.payload.url).host;
-            return h.response().redirect(`${domain}-${now}`)
+            return h.response().redirect(`${domain}-${now.getTime()}`)
       },
       options: {
         validate: {
@@ -78,9 +53,17 @@ const DB = {
       }
     })
 
+    server.route({
+      method: 'GET',
+      path: '/check/',
+      handler: async (request, h) => {
+        return Boom.badRequest()
+      }
+    })
 
     log("registered");
   }
+
 }
 
 module.exports = DB;
