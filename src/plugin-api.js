@@ -18,6 +18,8 @@ const GreenSpeedAPI = {
   once: true, // ignore repeated calls to register this plugin
   register: async function(server, options) {
 
+    log("registering");
+
     server.route({
       method: 'POST',
       path: '/',
@@ -42,6 +44,8 @@ const GreenSpeedAPI = {
         }
       }
     });
+
+    log("registered");
   }
 }
 

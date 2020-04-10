@@ -3,19 +3,26 @@
 const Hapi = require('@hapi/hapi');
 const log = require("debug")("gd:greenspeed:webui");
 const WebUI = require('./plugin-web-ui');
-// const Boom = require("@hapi/boom")
-// const mvdir = require('mvdir');
+const GreenspeedResults = require('./plugin-greenspeed-results');
+const DB = require('./plugin-db');
 
-
-const init = async () => {
+const init = async (options) => {
 
   const server = Hapi.server({
     port: process.env.PORT || 3000,
     host: '0.0.0.0',
   });
 
+  log("registering db with options.db: ", options)
+  await server.register([
+    WebUI,
+    GreenspeedResults,
+    {
+      plugin: DB,
+      options: options
+    }
+  ]);
   await server.initialize();
-  await server.register(WebUI);
   return server;
 }
 

@@ -1,11 +1,17 @@
 describe("WebUI Server", () => {
 
   const { init, start } = require('../web-ui');
+  const knexfile = require('../../knexfile');
 
   let server;
 
   beforeEach(async () => {
-    server = await init();
+    options =  {
+      db: {
+        knex: knexfile.development
+      }
+    }
+    server = await init(options);
   });
 
   afterEach(async () => {

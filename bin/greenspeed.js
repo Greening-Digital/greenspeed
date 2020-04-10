@@ -22,11 +22,6 @@ const definition = {
       description: 'The url of the page you want to check',
       alias: 'url',
   },
-  s: {
-    description: 'Run greenspeed as an API, triggering runs via POST request',
-    alias: 'server',
-    type: 'boolean'
-  },
   a: {
     description: 'Run greenspeed as a full stack',
     alias: 'whole-stack',
@@ -102,7 +97,7 @@ async function main(args) {
   if (args.u) {
     return await runGreenSpeedCLI(args)
   }
-  if (args.s) {
+  if (args.a) {
     return await runServer(args)
   }
   if (args.w) {

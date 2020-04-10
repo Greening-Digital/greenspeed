@@ -69,3 +69,15 @@ describe("API Server", () => {
   });
 
 })
+
+//  Column Name            | Data Type | References | Comments                                                |
+// | ---------------------- | --------- | ---------- | ------------------------------------------------------- |
+// | id                     | integer   |            | Primary key                                             |
+// | requester_email        | text      |            | The email of the requester, where results are sent      |
+// | url                    | uri       |            | The requested URL                                       |
+// | sitespeed_requested_at | datetime  |            | The timestamp of when the request was sent to sitespeed |
+// | sitespeed_response_at  | datetime  |            | The timestamp of when the request was sent to sitespeed |
+// | sitespeed_status       |           |            |                                                         |
+// | result_location        | uri       |            | The location of the results                             |
+// | inserted_at            | datetime  |            | The timestamp the request was made                      |
+// | updated_at             | datetime  |            | The timestamp the request was updated                   |

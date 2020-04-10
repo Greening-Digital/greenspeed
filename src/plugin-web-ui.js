@@ -10,6 +10,8 @@ const WebUI = {
   version: '0.0.2',
   once: true, // ignore repeated calls to register this plugin
   register: async function(server, options) {
+    log("registering");
+
     await server.register(Inert);
     server.path(Path.join(__dirname, 'public'));
 
@@ -23,6 +25,8 @@ const WebUI = {
         },
       }
     });
+
+    log("registered");
   }
 }
 
