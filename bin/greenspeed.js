@@ -9,7 +9,8 @@ const callSiteSpeed = require("../src/callSitespeed");
 const Bossy = require('@hapi/bossy');
 
 const apiServer = require("../src/index");
-const webUI = require("../src/webui");
+const webUI = require("../src/web-ui");
+// const wholeStackServer = require("../src/whole-stack");
 
 const definition = {
   h: {
@@ -27,8 +28,8 @@ const definition = {
     type: 'boolean'
   },
   a: {
-    description: 'Runs as an API server, as part of a larger system',
-    alias: 'headless',
+    description: 'Run greenspeed as a full stack',
+    alias: 'whole-stack',
     type: 'boolean'
   },
   w: {
@@ -46,7 +47,7 @@ if (args instanceof Error) {
     return;
 }
 if (args.h) {
-    console.log(Bossy.usage(definition, 'greenspeed -u <url>'));
+    console.log(Bossy.usage(definition, 'greenspeed [<url>]'));
     return;
 }
 
@@ -60,7 +61,7 @@ for (let val of Object.values(args)) {
 }
 
 if (showUsage) {
-  console.log(Bossy.usage(definition, 'greenspeed -u <url>'))
+  console.log(Bossy.usage(definition, 'greenspeed [<url>]'))
   return
 }
 
