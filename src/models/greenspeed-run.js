@@ -29,7 +29,8 @@ class GreenSpeedRun extends Schwifty.Model {
 
   path() {
     const domain = new URL(this.url).host
-    return `${domain}-${this.sitespeed_request_at}`
+    const epochTime = this.sitespeed_request_at.getTime()
+    return `${domain}-${epochTime}`
   }
 
 }

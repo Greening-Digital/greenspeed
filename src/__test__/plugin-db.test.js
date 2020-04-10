@@ -43,6 +43,7 @@ describe("DB server plugin", () => {
     expect(count2).toEqual(1);
   })
 
+
   test("Submitting a site redirects you to a page for the report for the url", async () => {
     const options = {
       method: 'POST',
@@ -56,5 +57,29 @@ describe("DB server plugin", () => {
     expect(data.statusCode).toBe(302);
   })
 
-  test.todo("A waiting page for a url is updated after the greenspeed run has completed")
+
+  test("A waiting page for a url is updated after the greenspeed run has completed", async () => {
+
+    const { GreenSpeedRun } = server.models();
+    const now = new Date
+    const url = "https://greening.digital";
+
+    const run = await GreenSpeedRun.query().insert({
+      url: url,
+      sitespeed_request_at: now,
+      sitespeed_status: GreenSpeedRun.statuses.FINISHED,
+      created_at: now
+    }).first()
+
+    const options = {
+      method: 'GET',
+      url: `check/${run.path()}`
+    };
+
+    const data = await server.inject(options);
+
+    console.log(data)
+    expect(data.statusCode).toBe(200);
+    
+  })
 })

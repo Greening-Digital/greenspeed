@@ -55,9 +55,10 @@ const DB = {
 
     server.route({
       method: 'GET',
-      path: '/check/',
+      path: '/check/{checkPath}',
       handler: async (request, h) => {
-        return Boom.badRequest()
+        console.log(checkPath);
+        return Boom.badRequest();
       }
     })
 
