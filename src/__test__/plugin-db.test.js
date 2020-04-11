@@ -73,7 +73,7 @@ describe("DB server plugin", () => {
 
     const options = {
       method: 'GET',
-      url: `check/${run.path()}`
+      url: `/check/${run.path()}`
     };
 
     const data = await server.inject(options);
