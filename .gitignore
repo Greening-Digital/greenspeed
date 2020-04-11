@@ -105,3 +105,4 @@ dist
 
 # Ignore tmp directory
 tmp/
+greenspeed-results
