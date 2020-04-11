@@ -57,8 +57,11 @@ const DB = {
       method: 'GET',
       path: '/check/{checkPath}',
       handler: async (request, h) => {
-        console.log(checkPath);
-        return Boom.badRequest();
+        console.log(request.params.checkPath);
+
+        // add the template 
+
+        return h.response();
       }
     })
 
