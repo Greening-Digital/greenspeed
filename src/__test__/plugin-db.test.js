@@ -58,12 +58,12 @@ describe("DB server plugin", () => {
   })
 
 
-  test("A waiting page for a url is updated after the greenspeed run has completed", async () => {
+  test.only("A waiting page for a url is updated after the greenspeed run has completed", async () => {
 
     const { GreenSpeedRun } = server.models();
     const now = new Date
     const url = "https://greening.digital";
-
+    console.log(now.getTime());
     const run = await GreenSpeedRun.query().insert({
       url: url,
       sitespeed_request_at: now,
@@ -78,7 +78,7 @@ describe("DB server plugin", () => {
 
     const data = await server.inject(options);
 
-    console.log(data)
+    // console.log(data)
     expect(data.statusCode).toBe(200);
     
   })
