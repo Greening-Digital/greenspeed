@@ -63,12 +63,11 @@ describe("DB server plugin", () => {
     const { GreenSpeedRun } = server.models();
     const now = new Date
     const url = "https://greening.digital";
-    console.log(now.getTime());
+
     const run = await GreenSpeedRun.query().insert({
       url: url,
       sitespeed_request_at: now,
       sitespeed_status: GreenSpeedRun.statuses.FINISHED,
-      created_at: now
     }).first()
 
     const options = {
@@ -77,9 +76,7 @@ describe("DB server plugin", () => {
     };
 
     const data = await server.inject(options);
-
-    // console.log(data)
     expect(data.statusCode).toBe(200);
-    
+
   })
 })

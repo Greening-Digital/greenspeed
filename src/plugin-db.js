@@ -85,20 +85,18 @@ const DB = {
       method: 'GET',
       path: '/check/{checkPath}',
       handler: async (request, h) => {
-        console.log(request.params.checkPath);
+        log(request.params.checkPath);
         // TODO add check for safety
         const checkPath = request.params.checkPath;
 
         let timestamp = checkPath.split("-").slice(-1)[0];
 
         const { GreenSpeedRun } = server.models();
-        // add the template
 
         const run = await GreenSpeedRun.query()
           .where('sitespeed_request_at', timestamp).first();
 
-        console.log(run);
-        // console.log(run.path());
+        log(run);
 
         const ctx = {
           title: `Results for Greenspeed run`,

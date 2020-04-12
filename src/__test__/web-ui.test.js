@@ -6,7 +6,7 @@ describe("WebUI Server", () => {
   let server;
 
   beforeEach(async () => {
-    options =  {
+    options = {
       db: {
         knex: knexfile.development
       }
@@ -27,10 +27,4 @@ describe("WebUI Server", () => {
     const data = await server.inject(options);
     expect(data.statusCode).toBe(200);
   })
-
-  test.todo("Submitting a site, takes you to a waiting page for the results")
-
-  test.todo("Submitting a site, saves the site, and pending of the run")
-
-  test.todo("Waiting page for the results are updated after its greenspeed run has completed")
 })
