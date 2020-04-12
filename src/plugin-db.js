@@ -36,7 +36,7 @@ const DB = {
       method: 'POST',
       path: '/queue-site',
       handler: async (request, h) => {
-        request.log(`payload: ${request.payload}`)
+        request.log(`payload: ${request.payload.url}`)
         // create our object
         const now = new Date()
         const { GreenSpeedRun } = server.models();
@@ -48,9 +48,10 @@ const DB = {
           created_at: now.getTime()
         })
         const domain = new URL(request.payload.url).host;
-        return h.response().redirect(`${domain}-${now.getTime()}`)
+        return h.response().redirect(`/check/${domain}-${now.getTime()}`)
       },
       options: {
+
         validate: {
           payload: GreenSpeedRun.joiSchema
         }
@@ -78,6 +79,8 @@ const DB = {
     });
 
 
+
+
     server.route({
       method: 'GET',
       path: '/check/{checkPath}',
@@ -95,6 +98,7 @@ const DB = {
           .where('sitespeed_request_at', timestamp).first();
 
         console.log(run);
+        // console.log(run.path());
 
         const ctx = {
           title: `Results for Greenspeed run`,
