@@ -1,5 +1,6 @@
 'use strict';
 
+const EventEmitter = require('events');
 const Joi = require('@hapi/joi');
 const Boom = require('@hapi/boom');
 const Vision = require('@hapi/vision');
@@ -8,8 +9,16 @@ const Schwifty = require('schwifty');
 const Path = require('path');
 
 const GreenSpeedRun = require('./models/greenspeed-run')
+const GreenSpeedWorker = require('./greenspeed-worker')
 const log = require("debug")("gd:greenspeed:plugin:greenspeed-run");
 
+const PoorMansSideKiq = new EventEmitter();
+
+
+PoorMansSideKiq.on('run', async function (obj) {
+  log(`Queueing up a job to check ${obj.url}`);
+  await GreenSpeedWorker.process(obj);
+})
 
 
 const DB = {
@@ -42,13 +51,15 @@ const DB = {
         const now = new Date()
         const { GreenSpeedRun } = server.models();
 
-        await GreenSpeedRun.query().insert({
+        const run = await GreenSpeedRun.query().insertAndFetch({
           url: request.payload.url,
           sitespeed_request_at: now.getTime(),
           sitespeed_status: GreenSpeedRun.statuses.PENDING,
           created_at: now.getTime()
         })
         const domain = new URL(request.payload.url).host;
+        log(`Created run: ${run.id} for ${domain}`);
+        PoorMansSideKiq.emit('run', run)
         return h.response().redirect(`/check/${domain}-${now.getTime()}`)
       },
       options: {

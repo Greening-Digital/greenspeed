@@ -11,6 +11,7 @@ class GreenSpeedRun extends Schwifty.Model {
       FINISHED: 0,
       PENDING: 1,
       RUNNING: 2,
+      FAILED: 9,
     }
   }
 

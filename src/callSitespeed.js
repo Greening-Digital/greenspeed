@@ -1,11 +1,15 @@
 'use strict';
 
 const sitespeed = require('sitespeed.io')
+const log = require("debug")("gd:call-sitespeed");
 
-const callSitespeed = async function(url) {
+
+const callSitespeed = async function(url, obj) {
   const urls = [url];
   const name = new URL(urls[0]).host;
   const timestamp = Date.now();
+
+
 
   return await (async function run(){
     try {
@@ -33,6 +37,7 @@ const callSitespeed = async function(url) {
         outputFolder: `tmp/${name}-${timestamp}`,
         name: name
       });
+      log(`finished run for: ${result}`)
       return result;
     } catch (e) {
       return e;
