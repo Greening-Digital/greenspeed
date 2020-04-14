@@ -1,0 +1,10 @@
+{% extends "./base.njk" %}
+{% block content %}
+
+<h2>Results for run id: {{run.id}}, for {{run.url}}</h2>
+
+<h2>{{ message }}</h3>
+
+<h3>Run status: {{ run.sitespeed_status }}</h3>
+
+{% endblock %}

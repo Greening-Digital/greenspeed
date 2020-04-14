@@ -5,6 +5,7 @@ const Boom = require('@hapi/boom');
 const Vision = require('@hapi/vision');
 const Nunjucks = require('nunjucks');
 const Schwifty = require('schwifty');
+const Path = require('path');
 
 const GreenSpeedRun = require('./models/greenspeed-run')
 const log = require("debug")("gd:greenspeed:plugin:greenspeed-run");
@@ -60,7 +61,7 @@ const DB = {
 
     server.views({
       engines: {
-        html: {
+        njk: {
           compile: (src, options) => {
             const template = Nunjucks.compile(src, options.environment);
             return (context) => {
@@ -69,7 +70,7 @@ const DB = {
           },
 
           prepare: (options, next) => {
-            options.compileOptions.environment = Nunjucks.configure(options.path, { watch: false });
+            options.compileOptions.environment = Nunjucks.configure(Path.join(options.relativeTo, options.path), { watch: false, dev: true });
             return next();
           }
         }

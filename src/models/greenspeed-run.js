@@ -8,8 +8,9 @@ class GreenSpeedRun extends Schwifty.Model {
 
   static get statuses() {
     return {
+      FINISHED: 0,
       PENDING: 1,
-      FINISHED: 2
+      RUNNING: 2,
     }
   }
 
@@ -27,11 +28,18 @@ class GreenSpeedRun extends Schwifty.Model {
     });
   }
 
+  static async pendingRuns() {
+    return await GreenSpeedRun.query()
+        .where("sitespeed_status", GreenSpeedRun.statuses.PENDING)
+        .orderBy('created_at', 'desc');
+  }
+
   path() {
     const domain = new URL(this.url).host
     const epochTime = this.sitespeed_request_at.getTime()
     return `${domain}-${epochTime}`
   }
+
 
 }
 
