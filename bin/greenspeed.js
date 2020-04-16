@@ -3,7 +3,7 @@
 /*eslint no-console: 0*/
 
 'use strict';
-
+require('dotenv').config()
 const log = require("debug")("gd:greenspeed:cli");
 const callSiteSpeed = require("../src/callSitespeed");
 const Bossy = require('@hapi/bossy');
@@ -11,6 +11,8 @@ const Bossy = require('@hapi/bossy');
 const apiServer = require("../src/index");
 const webUI = require("../src/web-ui");
 // const wholeStackServer = require("../src/whole-stack");
+log(`environment: ${process.env.NODE_ENV}`);
+
 
 const definition = {
   h: {
