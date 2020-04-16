@@ -2,11 +2,14 @@
 const callSitespeed = require('./callSitespeed');
 const GreenSpeedRun = require('./models/greenspeed-run');
 const log = require("debug")("gd:greenspeed:worker");
-const knex = require('knex');
-const knexfile = require('../knexfile');
-GreenSpeedRun.knex(knex(knexfile.development));
+const mvdir = require('mvdir');
+const Path = require('path');
 
-const GreenSpeedWorker = {
+const GreenSpeedWorker = async function(options) {
+  // initialise the connection to the db
+  await GreenSpeedRun.knex(options);
+
+  return {
 
   process: async function (obj) {
     const running = GreenSpeedRun.statuses.RUNNING;
@@ -23,7 +26,8 @@ const GreenSpeedWorker = {
 
     log(`Starting run for ${obj.url}, ${obj.id}`)
 
-    const result = await callSitespeed(run.url).catch(async (err) => {
+    const sitespeedParams = { timestamp: obj.sitespeed_request_at };
+    const result = await callSitespeed(run.url, sitespeedParams).catch(async (err) => {
       console.log(`Error trying to check ${run.url}`)
       const failedrun = await GreenSpeedRun
         .query()
@@ -33,6 +37,8 @@ const GreenSpeedWorker = {
       return
     })
 
+
+
     // update with new details from the run
     const finishedRun = await GreenSpeedRun
       .query()
@@ -41,42 +47,23 @@ const GreenSpeedWorker = {
         result_location: "TO BE ADDED"
       });
     log(`Finished run. Returning run.id: ${finishedRun.id}`);
+
+    // move the results to a publicly accessible directory
+    log(`Moving run results`);
+    const domain = new URL(run.url).host;
+    const runPath = `${domain}-${run.sitespeed_request_at}`
+
+    await mvdir(
+      Path.join(__dirname, '..', 'tmp', runPath),
+      Path.join(__dirname, '..', 'greenspeed-results', runPath)
+    )
+    log(`Moved run results`);
+
     return finishedRun;
 
 
   },
-
+  }
 }
 
-// const init = async (options) => {
-
-//   GreenSpeedRun.knex(knex);
-
-// }
-//   // connect to database
-// const server = Hapi.server({
-//   debug: { request: ['error']}
-// });
-
-// log("registering db with options.db: ", options)
-
-// await server.register([
-//   {
-//     plugin: DB,
-//     options: options
-//   }
-// ]);
-// await server.initialize();
-
-
-// const result = await callSitespeed(url);
-
-// look for job
-
-// trigger greenspeed run
-
-// move files to necessary place
-
-
-// init()
 module.exports = GreenSpeedWorker
