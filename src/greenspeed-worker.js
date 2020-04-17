@@ -34,7 +34,6 @@ const GreenSpeedWorker = async function(options) {
         .patch({ sitespeed_status: "FAILED" })
         .findById(obj.id);
 
-      return
     })
 
 
@@ -46,6 +45,8 @@ const GreenSpeedWorker = async function(options) {
         sitespeed_status: finished,
         result_location: "TO BE ADDED"
       });
+
+    // TODO THIS IS BREAKING THE TESTS
     log(`Finished run. Returning run.id: ${finishedRun.id}`);
 
     // move the results to a publicly accessible directory

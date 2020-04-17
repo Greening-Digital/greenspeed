@@ -14,13 +14,6 @@ const log = require("debug")("gd:greenspeed:plugin:greenspeed-run");
 
 const PoorMansSideKiq = new EventEmitter();
 
-
-PoorMansSideKiq.on('run', async function (obj) {
-  log(`Queueing up a job to check ${obj.url}`);
-  await GreenSpeedWorker.process(obj);
-})
-
-
 const DB = {
   name: 'DB',
   version: '0.0.2',
@@ -29,6 +22,14 @@ const DB = {
     log("registering");
     // We declare the model that the rest of the app uses here to
     // represent a greenspeed run.
+
+    const worker = await GreenSpeedWorker(options.db.knex);
+
+    PoorMansSideKiq.on('run', async function (obj) {
+      log(`Queueing up a job to check ${obj.url}`);
+      await worker.process(obj);
+    })
+
 
     await server.register({
       plugin: Schwifty,
@@ -105,6 +106,9 @@ const DB = {
 
         const { GreenSpeedRun } = server.models();
 
+        const runs = await GreenSpeedRun.query().first();
+        log(runs);
+
         const run = await GreenSpeedRun.query()
           .where('sitespeed_request_at', timestamp).first();
 
@@ -117,6 +121,11 @@ const DB = {
         }
 
         return h.view('index', ctx);
+      },
+      options: {
+        log: {
+          collect: true
+        },
       }
     })
 

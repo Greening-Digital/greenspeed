@@ -7,7 +7,13 @@ const log = require("debug")("gd:call-sitespeed");
 const callSitespeed = async function(url, obj) {
   const urls = [url];
   const name = new URL(urls[0]).host;
-  const timestamp = Date.now();
+  let timestamp
+
+  if (obj.timestamp) {
+    timestamp = obj.timestamp;
+  } else {
+    timestamp = Date.now();
+  }
 
 
 
@@ -27,13 +33,13 @@ const callSitespeed = async function(url, obj) {
           headless: true,
           browser: 'firefox'
         },
-        sustainable: {
-          enable: true,
-          hosting: true,
-          co2PerDomain: true,
-          dirtiestResources: true,
-          useGreenWebHostingAPI: true,
-        },
+        // sustainable: {
+        //   enable: true,
+        //   hosting: true,
+        //   co2PerDomain: true,
+        //   dirtiestResources: true,
+        //   useGreenWebHostingAPI: true,
+        // },
         outputFolder: `tmp/${name}-${timestamp}`,
         name: name
       });

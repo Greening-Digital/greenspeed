@@ -5,14 +5,13 @@ const log = require("debug")("gd:greenspeed:webui");
 const WebUI = require('./plugin-web-ui');
 const GreenspeedResults = require('./plugin-greenspeed-results');
 const DB = require('./plugin-db');
-const knexfile = require('../knexfile');
 
 const init = async (options) => {
 
   const server = Hapi.server({
     port: process.env.PORT || 3000,
     host: '0.0.0.0',
-    debug: { request: ['error']}
+    debug: { request: '*'}
   });
 
   log("registering db with options.db: ", options)
@@ -28,12 +27,7 @@ const init = async (options) => {
   return server;
 }
 
-const start = async () => {
-  const options =  {
-    db: {
-      knex: knexfile.development
-    }
-  }
+const start = async (options) => {
 
   const server = await init(options);
 
