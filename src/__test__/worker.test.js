@@ -47,7 +47,7 @@ describe("Worker", () => {
       expect(idList).toContain(run.id);
 
     });
-    test.only("triggers a greenspeed run", async () => {
+    test("triggers a greenspeed run", async () => {
       // check our run is pending first
       expect(parseInt(run.sitespeed_status)).toBe(GreenSpeedRun.statuses.PENDING)
 

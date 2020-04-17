@@ -18,11 +18,15 @@ const GreenSpeedWorker = async function(options) {
     // find the correpsonding run
     const run = await GreenSpeedRun.query().findById(obj.id);
 
+    log(`run: ${run}`);
+
     // update running status
     const inProgressRun = await GreenSpeedRun
       .query()
       .patch({ sitespeed_status: running })
       .findById(obj.id);
+
+    log(`inProgress run: ${inProgressRun}`);
 
     log(`Starting run for ${obj.url}, ${obj.id}`)
 
@@ -47,7 +51,7 @@ const GreenSpeedWorker = async function(options) {
       });
 
     // TODO THIS IS BREAKING THE TESTS
-    log(`Finished run. Returning run.id: ${finishedRun.id}`);
+    log(`Finished run. Returning run.id: ${finishedRun}`);
 
     // move the results to a publicly accessible directory
     log(`Moving run results`);
